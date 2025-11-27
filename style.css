@@ -1,0 +1,318 @@
+﻿* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  position: relative;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+  color: #fff;
+  background: #02030a;
+  --glow-strength: 0.7;
+}
+
+/* Animated gradient layer behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -18%;
+  background: var(--bg, radial-gradient(circle at 40% 20%, #ffebff 0%, #ff8ad7 28%, #3b1554 78%, #050010 100%));
+  background-size: 200% 200%;
+  filter: saturate(1.05);
+  opacity: 0.95;
+  animation: gradient-pan var(--pan-duration, 26s) ease-in-out infinite alternate;
+  transform-origin: center;
+  z-index: 0;
+  will-change: background-position, transform;
+}
+
+@keyframes gradient-pan {
+  0% {
+    background-position: 18% 18%;
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    background-position: 82% 38%;
+    transform: rotate(3deg) scale(1.04);
+  }
+  100% {
+    background-position: 36% 84%;
+    transform: rotate(-3deg) scale(1.02);
+  }
+}
+
+/* Theme palettes for animated gradient and blob colors */
+body.theme-candyfloss {
+  --bg: radial-gradient(circle at 32% 18%, #ffe6ff 0%, #ff9ad5 25%, #3b1554 80%, #050010 100%);
+  --blob1: #ff7de0;
+  --blob2: #8be3ff;
+  --blob3: #ffd26f;
+  --blob4: #6b4bff;
+  --pan-duration: 24s;
+}
+
+body.theme-ocean-hush {
+  --bg: radial-gradient(circle at 48% 16%, #e0f7ff 0%, #6ac8ff 25%, #003a5c 78%, #00060f 100%);
+  --blob1: #54d2ff;
+  --blob2: #73ffd6;
+  --blob3: #4c7bff;
+  --blob4: #a6b6ff;
+  --pan-duration: 26s;
+}
+
+body.theme-moon-mist {
+  --bg: radial-gradient(circle at 52% 12%, #f6faff 0%, #cfd9ff 30%, #2b3258 80%, #050511 100%);
+  --blob1: #aac8ff;
+  --blob2: #7ad1ff;
+  --blob3: #ffe6a7;
+  --blob4: #7f7bff;
+  --pan-duration: 28s;
+}
+
+body.theme-forest-lullaby {
+  --bg: radial-gradient(circle at 44% 14%, #ecffe8 0%, #92d48a 30%, #20452b 80%, #020b04 100%);
+  --blob1: #5cf7a6;
+  --blob2: #9cf178;
+  --blob3: #7de3c2;
+  --blob4: #d1ff8f;
+  --pan-duration: 28s;
+}
+
+#glow-layer {
+  position: fixed;
+  inset: -16%;
+  filter: blur(36px) saturate(1.2);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: calc(0.25 + 0.75 * var(--glow-strength));
+  z-index: 1;
+  transform: scale(1);
+  transform-origin: center;
+  will-change: filter, transform, opacity;
+  animation: pulse-glow 14s ease-in-out infinite;
+}
+
+#glow-layer .blob {
+  position: absolute;
+  border-radius: 999px;
+  opacity: 0.6;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+#glow-layer .b1 {
+  width: 44vmin;
+  height: 44vmin;
+  left: 8%;
+  top: 8%;
+  background: radial-gradient(circle at 30% 30%, var(--blob1) 0%, rgba(255, 255, 255, 0.08) 20%, transparent 62%);
+  animation-name: drift-a;
+  animation-duration: 24s;
+}
+
+#glow-layer .b2 {
+  width: 34vmin;
+  height: 34vmin;
+  right: 6%;
+  top: 16%;
+  background: radial-gradient(circle at 30% 30%, var(--blob2) 0%, rgba(255, 255, 255, 0.06) 18%, transparent 60%);
+  animation-name: drift-b;
+  animation-duration: 22s;
+  animation-delay: -6s;
+}
+
+#glow-layer .b3 {
+  width: 46vmin;
+  height: 46vmin;
+  left: 14%;
+  bottom: 8%;
+  background: radial-gradient(circle at 30% 30%, var(--blob3) 0%, rgba(255, 255, 255, 0.06) 22%, transparent 65%);
+  animation-name: drift-c;
+  animation-duration: 28s;
+  animation-delay: -10s;
+}
+
+#glow-layer .b4 {
+  width: 40vmin;
+  height: 40vmin;
+  right: 12%;
+  bottom: 10%;
+  background: radial-gradient(circle at 30% 30%, var(--blob4) 0%, rgba(255, 255, 255, 0.05) 22%, transparent 60%);
+  animation-name: drift-d;
+  animation-duration: 32s;
+  animation-delay: -14s;
+}
+
+@keyframes drift-a {
+  0% {
+    transform: translate(-6vw, -4vh) scale(0.9);
+  }
+  50% {
+    transform: translate(10vw, 8vh) scale(1.08);
+  }
+  100% {
+    transform: translate(-8vw, 12vh) scale(0.95);
+  }
+}
+
+@keyframes drift-b {
+  0% {
+    transform: translate(4vw, -6vh) scale(0.95);
+  }
+  50% {
+    transform: translate(-8vw, 10vh) scale(1.05);
+  }
+  100% {
+    transform: translate(12vw, -2vh) scale(0.9);
+  }
+}
+
+@keyframes drift-c {
+  0% {
+    transform: translate(-10vw, 6vh) scale(1.05);
+  }
+  50% {
+    transform: translate(14vw, -6vh) scale(1.12);
+  }
+  100% {
+    transform: translate(-4vw, 12vh) scale(0.96);
+  }
+}
+
+@keyframes drift-d {
+  0% {
+    transform: translate(6vw, 8vh) scale(0.9);
+  }
+  50% {
+    transform: translate(-12vw, -8vh) scale(1.1);
+  }
+  100% {
+    transform: translate(8vw, 10vh) scale(0.94);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    filter: blur(34px) saturate(1.18);
+    transform: scale(0.985);
+    opacity: calc(0.24 + 0.7 * var(--glow-strength));
+  }
+  50% {
+    filter: blur(42px) saturate(1.35);
+    transform: scale(1.025);
+    opacity: calc(0.32 + 0.8 * var(--glow-strength));
+  }
+  100% {
+    filter: blur(36px) saturate(1.22);
+    transform: scale(1.0);
+    opacity: calc(0.26 + 0.75 * var(--glow-strength));
+  }
+}
+
+/* Dimmer overlay controlled via JS for brightness */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* UI panel */
+#ui {
+  position: fixed;
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom, 12px));
+  transform: translateX(-50%);
+  background: rgba(5, 5, 20, 0.9);
+  border-radius: 16px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: min(86vw, 320px);
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 3;
+}
+
+#ui .row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+#ui label {
+  font-size: 0.9rem;
+}
+
+#theme,
+#brightness {
+  flex: 1;
+}
+
+#brightness {
+  max-width: 160px;
+}
+
+#brightness-value {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: #4450ff;
+  color: #fff;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background: #5a64ff;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+@media (max-width: 640px) {
+  #ui {
+    bottom: max(10px, env(safe-area-inset-bottom, 10px));
+    width: calc(100% - 24px);
+    min-width: unset;
+    padding: 12px 14px;
+    gap: 8px;
+  }
+
+  #ui .row {
+    gap: 6px;
+  }
+
+  #brightness {
+    max-width: none;
+  }
+
+  #brightness-value {
+    width: 44px;
+    text-align: right;
+  }
+
+  button {
+    width: 100%;
+    text-align: center;
+  }
+}

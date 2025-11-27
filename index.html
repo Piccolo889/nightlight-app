@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Night Light MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-candyfloss">
+  <div id="glow-layer" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+    <span class="blob b4"></span>
+  </div>
+  <div id="overlay"></div>
+
+  <div id="ui">
+    <div class="row">
+      <label for="theme">Theme:</label>
+      <select id="theme">
+        <option value="candyfloss">Candyfloss</option>
+        <option value="ocean-hush">Ocean Hush</option>
+        <option value="moon-mist">Moon Mist</option>
+        <option value="forest-lullaby">Forest Lullaby</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label for="brightness">Brightness:</label>
+      <input id="brightness" type="range" min="0" max="100" value="70" />
+      <span id="brightness-value">70%</span>
+    </div>
+
+    <div class="row">
+      <button id="sound-toggle">Play Ambient Sound</button>
+    </div>
+  </div>
+
+  <!-- Ambient sound loop (you provide ambient.mp3) -->
+  <audio id="ambient" src="ambient.mp3" preload="auto" loop></audio>
+
+  <script src="main.js"></script>
+</body>
+</html>
