@@ -120,18 +120,18 @@ body.theme-candyfloss {
   --gy: 18%;
   --pan-duration: 24s;
   --color-duration: 18s;
-  --c1a: #ff6fd8;
-  --c1b: #ff9bf0;
-  --c2a: #5ce8ff;
-  --c2b: #73fff4;
-  --c3a: #4a1868;
-  --c3b: #6b1f8f;
-  --c4a: #0a0118;
-  --c4b: #12061f;
-  --blob1: #ff7de0;
-  --blob2: #8be3ff;
-  --blob3: #ffd26f;
-  --blob4: #6b4bff;
+  --c1a: #ff8edf;
+  --c1b: #ffb3f4;
+  --c2a: #8cf0ff;
+  --c2b: #a5fffa;
+  --c3a: #5b2b82;
+  --c3b: #6e3a99;
+  --c4a: #120a24;
+  --c4b: #1a0f30;
+  --blob1: #ff9de8;
+  --blob2: #9ae8ff;
+  --blob3: #ffe08f;
+  --blob4: #7b65ff;
 }
 
 body.theme-ocean-hush {
@@ -139,18 +139,18 @@ body.theme-ocean-hush {
   --gy: 14%;
   --pan-duration: 26s;
   --color-duration: 20s;
-  --c1a: #7ae7ff;
-  --c1b: #54d2ff;
-  --c2a: #4ce4c6;
-  --c2b: #6dffd8;
-  --c3a: #2c5fa4;
-  --c3b: #1f4b82;
-  --c4a: #031018;
-  --c4b: #041b28;
-  --blob1: #54d2ff;
-  --blob2: #73ffd6;
-  --blob3: #4c7bff;
-  --blob4: #a6b6ff;
+  --c1a: #9ae8ff;
+  --c1b: #6fd8ff;
+  --c2a: #6ff0d3;
+  --c2b: #8affe0;
+  --c3a: #3d73b8;
+  --c3b: #2d5f9c;
+  --c4a: #08202e;
+  --c4b: #0b2c3d;
+  --blob1: #6fdcff;
+  --blob2: #86ffe0;
+  --blob3: #5c8cff;
+  --blob4: #b7c8ff;
 }
 
 body.theme-moon-mist {
@@ -158,18 +158,18 @@ body.theme-moon-mist {
   --gy: 12%;
   --pan-duration: 28s;
   --color-duration: 22s;
-  --c1a: #dfe8ff;
-  --c1b: #b8d7ff;
-  --c2a: #96c8ff;
-  --c2b: #7ad1ff;
-  --c3a: #3b4370;
-  --c3b: #2a355f;
-  --c4a: #080a18;
-  --c4b: #0d1024;
-  --blob1: #aac8ff;
-  --blob2: #7ad1ff;
-  --blob3: #ffe6a7;
-  --blob4: #7f7bff;
+  --c1a: #e6efff;
+  --c1b: #c5dcff;
+  --c2a: #a3d5ff;
+  --c2b: #8edbff;
+  --c3a: #3f4978;
+  --c3b: #313c68;
+  --c4a: #0b0e1f;
+  --c4b: #11152b;
+  --blob1: #b7d4ff;
+  --blob2: #8fd8ff;
+  --blob3: #ffebb8;
+  --blob4: #8a86ff;
 }
 
 body.theme-forest-lullaby {
@@ -177,18 +177,18 @@ body.theme-forest-lullaby {
   --gy: 14%;
   --pan-duration: 28s;
   --color-duration: 24s;
-  --c1a: #b8ffb1;
-  --c1b: #8cf3a1;
-  --c2a: #6ce3b0;
-  --c2b: #8cf1c7;
-  --c3a: #2d5f3a;
-  --c3b: #1f4a2d;
-  --c4a: #04140a;
-  --c4b: #072013;
-  --blob1: #5cf7a6;
-  --blob2: #9cf178;
-  --blob3: #7de3c2;
-  --blob4: #d1ff8f;
+  --c1a: #ccffd0;
+  --c1b: #aef9c0;
+  --c2a: #80eac0;
+  --c2b: #a0f4d2;
+  --c3a: #3a7b4a;
+  --c3b: #2f6840;
+  --c4a: #0a1d11;
+  --c4b: #0f2818;
+  --blob1: #74f9b4;
+  --blob2: #b0f68e;
+  --blob3: #94f0d2;
+  --blob4: #ddffb0;
 }
 
 #glow-layer {
@@ -418,6 +418,19 @@ button:active {
 }
 
 @media (max-width: 640px) {
+  body::before {
+    filter: saturate(0.88) brightness(1.06);
+  }
+
+  body::after {
+    opacity: calc(0.16 + 0.45 * var(--glow-strength));
+    filter: blur(26px);
+  }
+
+  #glow-layer {
+    opacity: calc(0.22 + 0.65 * var(--glow-strength));
+  }
+
   #ui {
     bottom: max(10px, env(safe-area-inset-bottom, 10px));
     width: calc(100% - 24px);
