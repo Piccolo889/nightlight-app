@@ -1,4 +1,9 @@
-﻿* {
+﻿@property --c1 { syntax: '<color>'; inherits: false; initial-value: #ff6fd8; }
+@property --c2 { syntax: '<color>'; inherits: false; initial-value: #5ce8ff; }
+@property --c3 { syntax: '<color>'; inherits: false; initial-value: #4a1868; }
+@property --c4 { syntax: '<color>'; inherits: false; initial-value: #0a0118; }
+
+* {
   box-sizing: border-box;
 }
 
@@ -17,6 +22,18 @@ body {
   color: #fff;
   background: #02030a;
   --glow-strength: 0.7;
+  --gx: 40%;
+  --gy: 20%;
+  --pan-duration: 26s;
+  --color-duration: 22s;
+  --c1a: #ff6fd8;
+  --c1b: #ff9bf0;
+  --c2a: #5ce8ff;
+  --c2b: #73fff4;
+  --c3a: #4a1868;
+  --c3b: #6b1f8f;
+  --c4a: #0a0118;
+  --c4b: #12061f;
 }
 
 /* Animated gradient layer behind everything */
@@ -24,14 +41,41 @@ body::before {
   content: "";
   position: fixed;
   inset: -18%;
-  background: var(--bg, radial-gradient(circle at 40% 20%, #ffebff 0%, #ff8ad7 28%, #3b1554 78%, #050010 100%));
+  background: radial-gradient(
+    circle at var(--gx) var(--gy),
+    var(--c1) 0%,
+    var(--c2) 26%,
+    var(--c3) 72%,
+    var(--c4) 100%
+  );
   background-size: 200% 200%;
   filter: saturate(1.05);
   opacity: 0.95;
-  animation: gradient-pan var(--pan-duration, 26s) ease-in-out infinite alternate;
+  animation:
+    gradient-pan var(--pan-duration) ease-in-out infinite alternate,
+    color-cycle var(--color-duration) ease-in-out infinite alternate;
   transform-origin: center;
   z-index: 0;
-  will-change: background-position, transform;
+  will-change: background-position, transform, filter;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  background: radial-gradient(
+    circle at var(--hx, 64%) var(--hy, 36%),
+    rgba(255, 255, 255, 0.38) 0%,
+    rgba(255, 255, 255, 0.16) 18%,
+    rgba(255, 255, 255, 0) 46%
+  );
+  mix-blend-mode: screen;
+  filter: blur(28px);
+  opacity: calc(0.22 + 0.58 * var(--glow-strength));
+  animation: highlight-sweep 18s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+  will-change: background-position, opacity, filter;
 }
 
 @keyframes gradient-pan {
@@ -49,41 +93,102 @@ body::before {
   }
 }
 
+@keyframes color-cycle {
+  0% {
+    --c1: var(--c1a);
+    --c2: var(--c2a);
+    --c3: var(--c3a);
+    --c4: var(--c4a);
+  }
+  50% {
+    --c1: var(--c1b);
+    --c2: var(--c2b);
+    --c3: var(--c3b);
+    --c4: var(--c4b);
+  }
+  100% {
+    --c1: var(--c1a);
+    --c2: var(--c2a);
+    --c3: var(--c3a);
+    --c4: var(--c4a);
+  }
+}
+
 /* Theme palettes for animated gradient and blob colors */
 body.theme-candyfloss {
-  --bg: radial-gradient(circle at 32% 18%, #ffe6ff 0%, #ff9ad5 25%, #3b1554 80%, #050010 100%);
+  --gx: 34%;
+  --gy: 18%;
+  --pan-duration: 24s;
+  --color-duration: 18s;
+  --c1a: #ff6fd8;
+  --c1b: #ff9bf0;
+  --c2a: #5ce8ff;
+  --c2b: #73fff4;
+  --c3a: #4a1868;
+  --c3b: #6b1f8f;
+  --c4a: #0a0118;
+  --c4b: #12061f;
   --blob1: #ff7de0;
   --blob2: #8be3ff;
   --blob3: #ffd26f;
   --blob4: #6b4bff;
-  --pan-duration: 24s;
 }
 
 body.theme-ocean-hush {
-  --bg: radial-gradient(circle at 48% 16%, #e0f7ff 0%, #6ac8ff 25%, #003a5c 78%, #00060f 100%);
+  --gx: 48%;
+  --gy: 14%;
+  --pan-duration: 26s;
+  --color-duration: 20s;
+  --c1a: #7ae7ff;
+  --c1b: #54d2ff;
+  --c2a: #4ce4c6;
+  --c2b: #6dffd8;
+  --c3a: #2c5fa4;
+  --c3b: #1f4b82;
+  --c4a: #031018;
+  --c4b: #041b28;
   --blob1: #54d2ff;
   --blob2: #73ffd6;
   --blob3: #4c7bff;
   --blob4: #a6b6ff;
-  --pan-duration: 26s;
 }
 
 body.theme-moon-mist {
-  --bg: radial-gradient(circle at 52% 12%, #f6faff 0%, #cfd9ff 30%, #2b3258 80%, #050511 100%);
+  --gx: 52%;
+  --gy: 12%;
+  --pan-duration: 28s;
+  --color-duration: 22s;
+  --c1a: #dfe8ff;
+  --c1b: #b8d7ff;
+  --c2a: #96c8ff;
+  --c2b: #7ad1ff;
+  --c3a: #3b4370;
+  --c3b: #2a355f;
+  --c4a: #080a18;
+  --c4b: #0d1024;
   --blob1: #aac8ff;
   --blob2: #7ad1ff;
   --blob3: #ffe6a7;
   --blob4: #7f7bff;
-  --pan-duration: 28s;
 }
 
 body.theme-forest-lullaby {
-  --bg: radial-gradient(circle at 44% 14%, #ecffe8 0%, #92d48a 30%, #20452b 80%, #020b04 100%);
+  --gx: 42%;
+  --gy: 14%;
+  --pan-duration: 28s;
+  --color-duration: 24s;
+  --c1a: #b8ffb1;
+  --c1b: #8cf3a1;
+  --c2a: #6ce3b0;
+  --c2b: #8cf1c7;
+  --c3a: #2d5f3a;
+  --c3b: #1f4a2d;
+  --c4a: #04140a;
+  --c4b: #072013;
   --blob1: #5cf7a6;
   --blob2: #9cf178;
   --blob3: #7de3c2;
   --blob4: #d1ff8f;
-  --pan-duration: 28s;
 }
 
 #glow-layer {
@@ -93,7 +198,7 @@ body.theme-forest-lullaby {
   mix-blend-mode: screen;
   pointer-events: none;
   opacity: calc(0.25 + 0.75 * var(--glow-strength));
-  z-index: 1;
+  z-index: 2;
   transform: scale(1);
   transform-origin: center;
   will-change: filter, transform, opacity;
@@ -217,6 +322,29 @@ body.theme-forest-lullaby {
   }
 }
 
+@keyframes highlight-sweep {
+  0% {
+    background-position: 18% 18%;
+    opacity: calc(0.18 + 0.5 * var(--glow-strength));
+    filter: blur(24px);
+  }
+  40% {
+    background-position: 76% 24%;
+    opacity: calc(0.32 + 0.55 * var(--glow-strength));
+    filter: blur(28px);
+  }
+  70% {
+    background-position: 58% 78%;
+    opacity: calc(0.24 + 0.52 * var(--glow-strength));
+    filter: blur(32px);
+  }
+  100% {
+    background-position: 24% 64%;
+    opacity: calc(0.2 + 0.48 * var(--glow-strength));
+    filter: blur(26px);
+  }
+}
+
 /* Dimmer overlay controlled via JS for brightness */
 #overlay {
   position: fixed;
@@ -224,7 +352,7 @@ body.theme-forest-lullaby {
   background: #000;
   opacity: 0.3;
   pointer-events: none;
-  z-index: 2;
+  z-index: 3;
 }
 
 /* UI panel */
@@ -242,7 +370,7 @@ body.theme-forest-lullaby {
   min-width: min(86vw, 320px);
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
-  z-index: 3;
+  z-index: 4;
 }
 
 #ui .row {
