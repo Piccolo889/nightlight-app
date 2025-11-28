@@ -13,33 +13,90 @@
     <span class="blob b3"></span>
     <span class="blob b4"></span>
   </div>
+  <div id="orb-layer" aria-hidden="true">
+    <span class="orb o1"></span>
+    <span class="orb o2"></span>
+    <span class="orb o3"></span>
+    <span class="orb o4"></span>
+  </div>
+  <div id="theme-blend" aria-hidden="true"></div>
+  <div id="menu-backdrop" aria-hidden="true"></div>
+  <div id="tap-layer" aria-hidden="true"></div>
   <div id="overlay"></div>
 
-  <div id="ui">
-    <div class="row">
-      <label for="theme">Theme:</label>
-      <select id="theme">
-        <option value="candyfloss">Candyfloss</option>
-        <option value="ocean-hush">Ocean Hush</option>
-        <option value="moon-mist">Moon Mist</option>
-        <option value="forest-lullaby">Forest Lullaby</option>
-      </select>
+  <header id="top-bar">
+    <button id="menu-toggle" aria-label="Toggle menu">
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+    </button>
+    <div id="menu-panel" aria-label="Options">
+      <div class="section">
+        <div class="section-title">Themes</div>
+        <div class="tile-grid" id="theme-tiles">
+          <button class="tile" data-theme="candyfloss">Candyfloss</button>
+          <button class="tile" data-theme="ocean-hush">Ocean</button>
+          <button class="tile" data-theme="moon-mist">Moon</button>
+          <button class="tile" data-theme="forest-lullaby">Forest</button>
+          <button class="tile" data-theme="aurora">Aurora</button>
+          <button class="tile" data-theme="glacier">Glacier</button>
+          <button class="tile" data-theme="coral">Coral</button>
+          <button class="tile" data-theme="ember">Ember Glow</button>
+          <button class="tile" data-theme="rainbow">Rainbow</button>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">Soundscapes</div>
+        <div class="tile-grid" id="sound-tiles">
+          <button class="tile" data-sound="rain.mp3">Rain</button>
+          <button class="tile" data-sound="river.mp3">River</button>
+          <button class="tile" data-sound="cicadas.mp3">Cicadas</button>
+          <button class="tile" data-sound="city.mp3">City</button>
+          <button class="tile" data-sound="garden.mp3">Garden</button>
+          <button class="tile" data-sound="windchimes.mp3">Chimes</button>
+          <button class="tile" data-sound="vacuum.mp3">Vacuum</button>
+          <button class="tile" data-sound="wind.mp3">Wind</button>
+          <button class="tile" data-sound="forest.mp3">Forest</button>
+          <button class="tile" data-sound="nightcrickets.mp3">Crickets</button>
+          <button class="tile" data-sound="whitenoise.mp3">White Noise</button>
+          <button class="tile" data-sound="whales.mp3">Whales</button>
+        </div>
+        <div class="slider-row">
+          <label for="volume">Volume</label>
+          <input id="volume" type="range" min="0" max="100" value="60" aria-label="Volume" />
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">Sleep Timer</div>
+        <div class="timer-row">
+          <input
+            id="timer"
+            type="range"
+            min="0"
+            max="12"
+            step="1"
+            value="12"
+            aria-label="Sleep timer in 5 minute steps, infinity at max"
+          />
+          <div class="timer-label"><span id="timer-value">∞</span></div>
+          <button id="timer-clear" type="button" aria-label="Clear timer">Clear</button>
+        </div>
+      </div>
     </div>
+  </header>
+  <div id="timer-indicator" aria-live="polite"></div>
 
-    <div class="row">
-      <label for="brightness">Brightness:</label>
-      <input id="brightness" type="range" min="0" max="100" value="70" />
-      <span id="brightness-value">70%</span>
-    </div>
-
-    <div class="row">
-      <button id="sound-toggle">Play Ambient Sound</button>
+  <div id="play-cluster">
+    <button id="play-button" aria-label="Play sound">
+      <span class="ring"></span>
+      <span class="glyph"></span>
+    </button>
+    <div class="dial">
+      <input id="brightness" type="range" min="0" max="100" value="100" aria-label="Brightness" />
     </div>
   </div>
 
-  <!-- Ambient sound loop (you provide ambient.mp3) -->
-  <audio id="ambient" src="ambient.mp3" preload="auto" loop></audio>
-
+  <audio id="ambient" src="rain.mp3" preload="auto" loop></audio>
   <script src="main.js"></script>
 </body>
 </html>
