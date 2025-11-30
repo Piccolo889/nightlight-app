@@ -24,6 +24,8 @@ let rippleId = 0;
 let activeRipple = null;
 let activePointerId = null;
 let volume = 0.6;
+let brightnessTouchActive = false;
+let brightnessPointerId = null;
 const timerPresets = [Infinity, 5, 10, 15, 20, 30, 60];
 let timerPresetIndex = 0;
 const STORE_KEY = "nightlight-state";
@@ -87,6 +89,41 @@ function updateBrightness() {
 
 brightnessSlider.addEventListener("input", updateBrightness);
 updateBrightness();
+
+// Touch brightness scrub on bottom 25% of screen
+function setBrightnessFromX(x) {
+  const w = window.innerWidth || 1;
+  const pct = Math.max(0, Math.min(1, x / w));
+  const val = Math.round(pct * 100);
+  brightnessSlider.value = val;
+  updateBrightness();
+}
+
+function startBrightnessTouch(e) {
+  if (e.pointerType !== "touch") return;
+  if (e.clientY < window.innerHeight * 0.75) return;
+  if (e.target.closest("#menu-panel, #top-bar, #play-cluster, .dial, .tile")) return;
+  brightnessTouchActive = true;
+  brightnessPointerId = e.pointerId;
+  setBrightnessFromX(e.clientX);
+}
+
+function moveBrightnessTouch(e) {
+  if (!brightnessTouchActive) return;
+  if (brightnessPointerId !== null && e.pointerId !== brightnessPointerId) return;
+  setBrightnessFromX(e.clientX);
+}
+
+function endBrightnessTouch(e) {
+  if (brightnessPointerId !== null && e.pointerId !== brightnessPointerId) return;
+  brightnessTouchActive = false;
+  brightnessPointerId = null;
+}
+
+window.addEventListener("pointerdown", startBrightnessTouch);
+window.addEventListener("pointermove", moveBrightnessTouch);
+window.addEventListener("pointerup", endBrightnessTouch);
+window.addEventListener("pointercancel", endBrightnessTouch);
 
 // --- AUDIO ---
 function updatePlayButton() {
