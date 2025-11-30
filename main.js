@@ -170,7 +170,7 @@ window.addEventListener("pointercancel", endBrightnessTouch, brightnessTouchOpts
 function handleSwipeStart(e) {
   if (e.pointerType !== "touch") return;
   if (brightnessTouchActive) return;
-  if (e.target.closest("#menu-panel, #top-bar, #play-cluster, .dial, .tile")) return;
+  if (e.target.closest("#menu-panel, #top-bar, .dial, .tile")) return;
   swipeStart = { x: e.clientX, y: e.clientY, id: e.pointerId };
 }
 
