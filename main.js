@@ -104,6 +104,7 @@ function startBrightnessTouch(e) {
   const threshold = window.innerHeight * 0.6; // bottom 40%
   if (e.clientY < threshold) return;
   if (e.target.closest("#menu-panel, #top-bar")) return;
+  if (e.cancelable) e.preventDefault();
   brightnessTouchActive = true;
   brightnessPointerId = e.pointerId;
   try {
@@ -115,6 +116,7 @@ function startBrightnessTouch(e) {
 function moveBrightnessTouch(e) {
   if (!brightnessTouchActive) return;
   if (brightnessPointerId !== null && e.pointerId !== brightnessPointerId) return;
+  if (e.cancelable) e.preventDefault();
   setBrightnessFromX(e.clientX);
 }
 
