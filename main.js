@@ -126,10 +126,11 @@ function endBrightnessTouch(e) {
   brightnessPointerId = null;
 }
 
-window.addEventListener("pointerdown", startBrightnessTouch);
-window.addEventListener("pointermove", moveBrightnessTouch);
-window.addEventListener("pointerup", endBrightnessTouch);
-window.addEventListener("pointercancel", endBrightnessTouch);
+const brightnessTouchOpts = { passive: false };
+window.addEventListener("pointerdown", startBrightnessTouch, brightnessTouchOpts);
+window.addEventListener("pointermove", moveBrightnessTouch, brightnessTouchOpts);
+window.addEventListener("pointerup", endBrightnessTouch, brightnessTouchOpts);
+window.addEventListener("pointercancel", endBrightnessTouch, brightnessTouchOpts);
 
 // --- AUDIO ---
 function updatePlayButton() {
