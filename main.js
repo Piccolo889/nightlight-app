@@ -4,9 +4,7 @@ const menuToggle = document.getElementById("menu-toggle");
 const menuPanel = document.getElementById("menu-panel");
 const ambient = document.getElementById("ambient");
 const overlay = document.getElementById("overlay");
-const timerSlider = document.getElementById("timer");
-const timerValue = document.getElementById("timer-value");
-const timerClear = document.getElementById("timer-clear");
+const timerToggle = document.getElementById("timer-toggle");
 const blendLayer = document.getElementById("theme-blend");
 const tapLayer = document.getElementById("tap-layer");
 const menuBackdrop = document.getElementById("menu-backdrop");
@@ -15,7 +13,7 @@ const body = document.body;
 
 const themeTiles = Array.from(document.querySelectorAll("[data-theme]"));
 const soundTiles = Array.from(document.querySelectorAll("[data-sound]"));
-const themes = ["candyfloss", "ocean-hush", "moon-mist", "forest-lullaby", "aurora", "glacier", "coral", "ember", "rainbow"];
+const themes = ["candyfloss", "ocean-hush", "moon-mist", "forest-lullaby", "aurora", "glacier", "coral", "ember", "rainbow", "midnight", "warmglow", "sunsetfade", "breathing", "candleglow", "galaxy", "snowfall"];
 
 let isPlaying = false;
 let currentSound = "rain.mp3";
@@ -26,6 +24,8 @@ let rippleId = 0;
 let activeRipple = null;
 let activePointerId = null;
 let volume = 0.6;
+const timerPresets = [Infinity, 5, 10, 15, 20, 30, 60];
+let timerPresetIndex = 0;
 const STORE_KEY = "nightlight-state";
 let stateLoaded = false;
 let timerDeadline = null;
@@ -55,13 +55,8 @@ function loadState() {
     }
     if (typeof data.timerMinutes === "number") {
       timerMinutes = data.timerMinutes;
-      if (timerSlider) {
-        if (!isFinite(timerMinutes)) {
-          timerSlider.value = 12;
-        } else {
-          timerSlider.value = Math.min(12, Math.round(timerMinutes / 5));
-        }
-      }
+      const idx = timerPresets.findIndex((v) => v === timerMinutes);
+      timerPresetIndex = idx >= 0 ? idx : 0;
     }
     stateLoaded = true;
   } catch (_) {}
@@ -72,7 +67,9 @@ function setTheme(theme) {
   themes.forEach((t) => body.classList.remove(`theme-${t}`));
   body.classList.add(`theme-${theme}`);
   themeTiles.forEach((tile) => {
-    tile.classList.toggle("active", tile.dataset.theme === theme);
+    const isActive = tile.dataset.theme === theme;
+    tile.classList.toggle("active", isActive);
+    tile.setAttribute("aria-pressed", String(isActive));
   });
   triggerBlend();
 }
@@ -128,7 +125,6 @@ function resetTimer() {
 
 function setSound(file, autoplay = false) {
   if (!ambient) return;
-  const shouldAutoPlay = autoplay && isPlaying;
   isPlaying = false;
   ambient.pause();
   currentSound = file;
@@ -136,17 +132,20 @@ function setSound(file, autoplay = false) {
   ambient.load();
 
   soundTiles.forEach((tile) => {
-    tile.classList.toggle("active", tile.dataset.sound === file);
+    const isActive = tile.dataset.sound === file;
+    tile.classList.toggle("active", isActive);
+    tile.setAttribute("aria-pressed", String(isActive));
   });
   saveState();
 
-  if (shouldAutoPlay) {
+  if (autoplay) {
     ambient
       .play()
       .then(() => {
         isPlaying = true;
         updatePlayButton();
         resetTimer();
+        saveState();
       })
       .catch((e) => {
         console.warn("Unable to start audio:", e);
@@ -217,38 +216,8 @@ function toggleMenu() {
 
 menuToggle.addEventListener("click", toggleMenu);
 
-// --- TIMER ---
-function updateTimerLabel(val) {
-  if (val >= 12) {
-    timerMinutes = Infinity;
-    timerValue.textContent = "∞";
-  } else {
-    timerMinutes = val * 5;
-    timerValue.textContent = `${timerMinutes}m`;
-  }
-}
-
-function onTimerChange() {
-  const raw = Number(timerSlider.value);
-  timerMinutes = raw >= 12 ? Infinity : raw * 5;
-  updateTimerLabel(raw);
-  resetTimer();
-  saveState();
-}
-
-if (timerSlider) {
-  timerSlider.addEventListener("input", onTimerChange);
-  updateTimerLabel(Number(timerSlider.value));
-}
-
-if (timerClear) {
-  timerClear.addEventListener("click", () => {
-    timerMinutes = Infinity;
-    if (timerSlider) timerSlider.value = 12;
-    updateTimerLabel(Number(timerSlider?.value || 12));
-    clearTimer();
-    saveState();
-  });
+if (timerToggle) {
+  timerToggle.addEventListener("click", cycleTimer);
 }
 
 function updateTimerIndicator() {
@@ -286,6 +255,24 @@ function triggerBlend() {
   blendTimer = setTimeout(() => {
     blendLayer.classList.remove("active");
   }, 500);
+}
+
+// Timer toggle
+function updateTimerButton() {
+  if (!timerToggle) return;
+  const val = timerPresets[timerPresetIndex];
+  const label = isFinite(val) ? `${val}` : "♾️";
+  timerToggle.setAttribute("aria-pressed", String(isFinite(val)));
+  const glyph = timerToggle.querySelector(".timer-glyph");
+  if (glyph) glyph.textContent = label;
+}
+
+function cycleTimer() {
+  timerPresetIndex = (timerPresetIndex + 1) % timerPresets.length;
+  timerMinutes = timerPresets[timerPresetIndex];
+  updateTimerButton();
+  resetTimer();
+  saveState();
 }
 
 // Tap ripple
@@ -365,6 +352,7 @@ if (!stateLoaded) {
 updateBrightness();
 updatePlayButton();
 updateTimerIndicator();
+updateTimerButton();
 
 // Optional: reduce brightness a bit by default for desktop
 window.addEventListener("load", () => {
