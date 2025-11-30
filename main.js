@@ -35,7 +35,7 @@ let stateLoaded = false;
 let timerDeadline = null;
 let timerInterval = null;
 let swipeStart = null;
-const SWIPE_THRESHOLD = 50;
+const SWIPE_THRESHOLD = 30;
 
 function saveState() {
   const data = {
@@ -169,16 +169,24 @@ window.addEventListener("pointercancel", endBrightnessTouch, brightnessTouchOpts
 // Theme swipe (vertical)
 function handleSwipeStart(e) {
   if (e.pointerType !== "touch") return;
-  if (brightnessTouchActive) return;
-  if (e.target.closest("#menu-panel, #top-bar, .dial, .tile")) return;
+  if (e.target.closest("#menu-panel, #menu-toggle, #timer-toggle, #play-button")) return;
   swipeStart = { x: e.clientX, y: e.clientY, id: e.pointerId };
+}
+
+function handleSwipeMove(e) {
+  if (!swipeStart) return;
+  if (swipeStart.id !== null && e.pointerId !== swipeStart.id) return;
+  swipeStart.lastX = e.clientX;
+  swipeStart.lastY = e.clientY;
 }
 
 function handleSwipeEnd(e) {
   if (!swipeStart) return;
   if (swipeStart.id !== null && e.pointerId !== swipeStart.id) return;
-  const dx = e.clientX - swipeStart.x;
-  const dy = e.clientY - swipeStart.y;
+  const endX = swipeStart.lastX ?? e.clientX;
+  const endY = swipeStart.lastY ?? e.clientY;
+  const dx = endX - swipeStart.x;
+  const dy = endY - swipeStart.y;
   swipeStart = null;
   if (Math.abs(dy) < SWIPE_THRESHOLD || Math.abs(dy) < Math.abs(dx)) return;
   const dir = dy < 0 ? 1 : -1; // up -> next, down -> prev
@@ -188,6 +196,7 @@ function handleSwipeEnd(e) {
 }
 
 window.addEventListener("pointerdown", handleSwipeStart, { passive: true });
+window.addEventListener("pointermove", handleSwipeMove, { passive: true });
 window.addEventListener("pointerup", handleSwipeEnd, { passive: true });
 window.addEventListener("pointercancel", handleSwipeEnd, { passive: true });
 
