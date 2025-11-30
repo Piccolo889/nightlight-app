@@ -1261,6 +1261,10 @@ body.theme-snowfall {
   pointer-events: auto;
 }
 
+.dial.show {
+  opacity: 0.9;
+}
+
 .dial:hover,
 .dial:focus-within {
   opacity: 0.9;

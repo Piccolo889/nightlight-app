@@ -26,6 +26,7 @@ let activePointerId = null;
 let volume = 0.6;
 let brightnessTouchActive = false;
 let brightnessPointerId = null;
+let brightnessDialHideTimer = null;
 const timerPresets = [Infinity, 5, 10, 15, 20, 30, 60];
 let timerPresetIndex = 0;
 const STORE_KEY = "nightlight-state";
@@ -97,6 +98,29 @@ function setBrightnessFromX(x) {
   const val = Math.round(pct * 100);
   brightnessSlider.value = val;
   updateBrightness();
+  showBrightnessDial();
+}
+
+function showBrightnessDial() {
+  const dial = document.querySelector(".brightness-dial");
+  if (!dial) return;
+  dial.classList.add("show");
+  if (brightnessDialHideTimer) {
+    clearTimeout(brightnessDialHideTimer);
+    brightnessDialHideTimer = null;
+  }
+}
+
+function scheduleHideBrightnessDial() {
+  const dial = document.querySelector(".brightness-dial");
+  if (!dial) return;
+  if (brightnessDialHideTimer) {
+    clearTimeout(brightnessDialHideTimer);
+  }
+  brightnessDialHideTimer = setTimeout(() => {
+    dial.classList.remove("show");
+    brightnessDialHideTimer = null;
+  }, 1200);
 }
 
 function startBrightnessTouch(e) {
@@ -124,6 +148,7 @@ function endBrightnessTouch(e) {
   if (brightnessPointerId !== null && e.pointerId !== brightnessPointerId) return;
   brightnessTouchActive = false;
   brightnessPointerId = null;
+  scheduleHideBrightnessDial();
 }
 
 const brightnessTouchOpts = { passive: false };
