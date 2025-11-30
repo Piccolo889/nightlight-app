@@ -94,7 +94,7 @@ updateBrightness();
 // Touch brightness scrub on bottom 25% of screen
 function setBrightnessFromX(x) {
   const w = window.innerWidth || 1;
-  const pad = Math.min(40, w * 0.05);
+  const pad = Math.min(60, w * 0.10);
   const effectiveW = Math.max(1, w - pad * 2);
   const pct = Math.max(0, Math.min(1, (x - pad) / effectiveW));
   const val = Math.round(pct * 100);
