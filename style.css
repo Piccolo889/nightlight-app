@@ -21,6 +21,7 @@ body {
   font-family: system-ui, sans-serif;
   color: #fff;
   background: #02030a;
+  touch-action: none;
   --glow-strength: 0.7;
   --menu-scale: 0.9;
   --gx: 40%;
