@@ -14,6 +14,7 @@ const body = document.body;
 const themeTiles = Array.from(document.querySelectorAll("[data-theme]"));
 const soundTiles = Array.from(document.querySelectorAll("[data-sound]"));
 const themes = ["candyfloss", "ocean-hush", "moon-mist", "forest-lullaby", "aurora", "glacier", "coral", "ember", "rainbow", "midnight", "warmglow", "sunsetfade", "breathing", "candleglow", "galaxy", "snowfall"];
+let currentTheme = "candyfloss";
 
 let isPlaying = false;
 let currentSound = "rain.mp3";
@@ -33,6 +34,8 @@ const STORE_KEY = "nightlight-state";
 let stateLoaded = false;
 let timerDeadline = null;
 let timerInterval = null;
+let swipeStart = null;
+const SWIPE_THRESHOLD = 50;
 
 function saveState() {
   const data = {
@@ -67,6 +70,7 @@ function loadState() {
 
 // --- THEME SWITCHING ---
 function setTheme(theme) {
+  currentTheme = theme;
   themes.forEach((t) => body.classList.remove(`theme-${t}`));
   body.classList.add(`theme-${theme}`);
   themeTiles.forEach((tile) => {
@@ -94,10 +98,12 @@ updateBrightness();
 // Touch brightness scrub on bottom 25% of screen
 function setBrightnessFromX(x) {
   const w = window.innerWidth || 1;
-  // Small padding so you can reach min/max without hugging the exact screen edge
-  const pad = Math.min(20, w * 0.02);
-  const effectiveW = Math.max(1, w - pad * 2);
-  const pct = Math.max(0, Math.min(1, (x - pad) / effectiveW));
+  // Give a generous edge margin so min/max are reachable without hugging the bezel
+  const pad = Math.max(30, w * 0.08); // 8% of width, at least 30px
+  const left = pad;
+  const right = Math.max(left + 1, w - pad);
+  const clampedX = Math.max(left, Math.min(right, x));
+  const pct = (clampedX - left) / (right - left);
   const val = Math.round(pct * 100);
   brightnessSlider.value = val;
   updateBrightness();
@@ -159,6 +165,31 @@ window.addEventListener("pointerdown", startBrightnessTouch, brightnessTouchOpts
 window.addEventListener("pointermove", moveBrightnessTouch, brightnessTouchOpts);
 window.addEventListener("pointerup", endBrightnessTouch, brightnessTouchOpts);
 window.addEventListener("pointercancel", endBrightnessTouch, brightnessTouchOpts);
+
+// Theme swipe (vertical)
+function handleSwipeStart(e) {
+  if (e.pointerType !== "touch") return;
+  if (brightnessTouchActive) return;
+  if (e.target.closest("#menu-panel, #top-bar, #play-cluster, .dial, .tile")) return;
+  swipeStart = { x: e.clientX, y: e.clientY, id: e.pointerId };
+}
+
+function handleSwipeEnd(e) {
+  if (!swipeStart) return;
+  if (swipeStart.id !== null && e.pointerId !== swipeStart.id) return;
+  const dx = e.clientX - swipeStart.x;
+  const dy = e.clientY - swipeStart.y;
+  swipeStart = null;
+  if (Math.abs(dy) < SWIPE_THRESHOLD || Math.abs(dy) < Math.abs(dx)) return;
+  const dir = dy < 0 ? 1 : -1; // up -> next, down -> prev
+  const idx = themes.indexOf(currentTheme);
+  const nextIdx = (idx + dir + themes.length) % themes.length;
+  setTheme(themes[nextIdx]);
+}
+
+window.addEventListener("pointerdown", handleSwipeStart, { passive: true });
+window.addEventListener("pointerup", handleSwipeEnd, { passive: true });
+window.addEventListener("pointercancel", handleSwipeEnd, { passive: true });
 
 // --- AUDIO ---
 function updatePlayButton() {
@@ -398,6 +429,11 @@ document.addEventListener("pointerleave", releaseRipple);
 
 // Volume
 function updateVolume() {
+  if (!volumeSlider) {
+    if (ambient) ambient.volume = volume;
+    saveState();
+    return;
+  }
   const val = Number(volumeSlider.value);
   volume = Math.min(1, Math.max(0, val / 100));
   if (ambient) ambient.volume = volume;

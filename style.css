@@ -1019,6 +1019,10 @@ body.theme-snowfall {
   grid-auto-rows: calc(var(--tile-size) + 26px);
 }
 
+.volume-dial {
+  display: none !important;
+}
+
 .tile-grid {
   --tile-size: 92px;
   display: grid;
