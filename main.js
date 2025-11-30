@@ -261,7 +261,7 @@ function triggerBlend() {
 function updateTimerButton() {
   if (!timerToggle) return;
   const val = timerPresets[timerPresetIndex];
-  const label = isFinite(val) ? `${val}` : "♾️";
+  const label = isFinite(val) ? `${val}` : "∞";
   timerToggle.setAttribute("aria-pressed", String(isFinite(val)));
   const glyph = timerToggle.querySelector(".timer-glyph");
   if (glyph) glyph.textContent = label;

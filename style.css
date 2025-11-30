@@ -1400,8 +1400,15 @@ body.theme-snowfall {
   }
 
   .tile-grid {
-    grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
-    gap: 6px;
+    --tile-size: 86px;
+    grid-template-columns: repeat(3, minmax(var(--tile-size), 1fr));
+    grid-auto-rows: calc(var(--tile-size) + 26px);
+    gap: 12px;
+  }
+
+  #sound-tiles .tile-grid {
+    grid-template-columns: repeat(3, minmax(var(--tile-size), 1fr));
+    grid-auto-rows: calc(var(--tile-size) + 26px);
   }
 
   .tile {
