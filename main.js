@@ -101,7 +101,7 @@ function setBrightnessFromX(x) {
 
 function startBrightnessTouch(e) {
   if (e.pointerType !== "touch") return;
-  if (e.clientY < window.innerHeight * 0.75) return;
+  if (e.clientY < window.innerHeight * 0.6) return;
   if (e.target.closest("#menu-panel, #top-bar, #play-cluster, .dial, .tile")) return;
   brightnessTouchActive = true;
   brightnessPointerId = e.pointerId;
